@@ -11,4 +11,3 @@ def primetest(n):
         r += 1
     numlist = [2, 7, 61] if n < 4759123141 else [2, 325, 9375, 28178, 450775, 9780504, 1795265022]
     return all(verify(i, n, r) for i in numlist)
-print(primetest(int(input())))
