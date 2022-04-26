@@ -25,7 +25,13 @@
 `primetest.py`
 
 밀러-라빈 소수 테스트를 사용하여 소수 판정을 작성하였습니다.
+
 시간복잡도는 ![O(k\log^n)](https://latex.codecogs.com/gif.latex?O%28k%5Clog%5E3n%29) 에 동작합니다. ( 이 때, ![k](https://latex.codecogs.com/gif.latex?k)는 소수 판별법을 몇 회 실행할지 결정하는 인자입니다. )
 
 ## 소인수 분해 ( Factorize )
 `factorize.py`
+
+pollard-rho 알고리즘을 이용하여 소인수분해를 작성하였습니다.
+pollard-rho 알고리즘 자체는 인수분해 알고리즘이지만, 이를 재귀적으로 1 또는 소수가 나올때까지 인수분해하여 소인수분해를 진행합니다.
+
+시간복잡도는 ![O(n^{\frac{1}{4}})](https://latex.codecogs.com/gif.latex?O%28n%5E%7B%5Cfrac%7B1%7D%7B4%7D%7D%29) 에 동작합니다.
