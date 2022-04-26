@@ -1,4 +1,4 @@
-def isprime(n):
+def primetest(n):
     def millerRabin(n):
         if n == 2:
             return True

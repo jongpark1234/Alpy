@@ -4,6 +4,7 @@
 ## 현재 진행도
     - 소수 판정 ( 50% )
     - 에라토스테네스의 체 ( 0% )
+    - 소인수 분해 ( 50% )
     - 누적 합 ( 0% )
     - 세그먼트 트리 ( 0% )
     - 느리게 갱신되는 세그먼트 트리 ( 0% )
@@ -21,7 +22,10 @@
 이후 더 추가될 수 있습니다.
 
 ## 소수 판정 ( Primality Test )
-`isprime.py`
+`primetest.py`
 
 밀러-라빈 소수 테스트를 사용하여 소수 판정을 작성하였습니다.
 시간복잡도는 ![O(k\log^n)](https://latex.codecogs.com/gif.latex?O%28k%5Clog%5E3n%29) 에 동작합니다. ( 이 때, ![k](https://latex.codecogs.com/gif.latex?k)는 소수 판별법을 몇 회 실행할지 결정하는 인자입니다. )
+
+## 소인수 분해 ( Factorize )
+`factorize.py`
