@@ -17,8 +17,8 @@
     - 트라이 ( 0% )
     - 최장 공통 부분 수열 ( 0% )
     - 가장 긴 증가하는 부분 수열 ( 0% )
+    - 피보나치 수 ( 30% )
     - Lower/Upper_bound ( 0% )
-    - 확장 유클리드 호제법 ( 0% )
 
 이후 더 추가될 수 있습니다.
 
@@ -55,3 +55,10 @@ pollard-rho 알고리즘을 이용하여 소인수분해를 작성하였습니�
 함수는 `square()`, int형 정수 하나를 매개변수로 받으며 n을 이루는 제곱수들을 내림차순 정렬된 list 형태로 반환합니다.
 
 시간복잡도는 ![O(N^{1/4}\sqrt{\ln N})](https://latex.codecogs.com/gif.latex?O%28N%5E%7B%5Cfrac%7B1%7D%7B4%7D%7D%5Csqrt%7B%5Cln%20N%7D%29) 에 동작합니다.
+
+## 피보나치 수 ( Fibonacci Number )
+`fibonacci.py`
+
+함수는 `fibonacci()`, 음이 아닌 int형 정수 하나를 매개변수로 받으며 n번째 피보나치 수를 int 형태로 반환합니다.
+
+시간복잡도는 ![O(\log N)](https://latex.codecogs.com/gif.latex?O%28%5Clog%20N%29) 에 동작합니다.
