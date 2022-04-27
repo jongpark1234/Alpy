@@ -5,7 +5,7 @@
     - 소수 판정 ( 80% )
     - 에라토스테네스의 체 ( 100% )
     - 소인수 분해 ( 70% )
-    - 제곱수 분해 ( 0% )
+    - 제곱수 분해 ( 100% )
     - 누적 합 ( 0% )
     - 세그먼트 트리 ( 0% )
     - 느리게 갱신되는 세그먼트 트리 ( 0% )
@@ -46,4 +46,11 @@ pollard-rho 알고리즘을 이용하여 소인수분해를 작성하였습니�
 
 함수는 `factorize()`, int형 정수 하나를 매개변수로 받으며 n의 소인수들을 정렬되지 않은 list 형태로 반환합니다.
 
-시간복잡도는 ![O(^{4}\sqrt{n})](https://latex.codecogs.com/gif.latex?O%28%5E%7B4%7D%5Csqrt%7Bn%7D%29) 에 동작합니다.
+시간복잡도는 ![O(^{4}\sqrt{n})](https://latex.codecogs.com/gif.latex?O%28n%5E%7B%5Cfrac%7B1%7D%7B4%7D%7D%29) 에 동작합니다.
+
+## 제곱수 분해 ( Decompose by Square )
+`square.py`
+
+함수는 `square()`, int형 정수 하나를 매개변수로 받으며 n을 이루는 제곱수들을 내림차순 정렬된 list 형태로 반환합니다.
+
+시간복잡도는 ![O(N^{1/4}\sqrt{\ln N})](https://latex.codecogs.com/gif.latex?O%28N%5E%7B1/4%7D%20%5Csqrt%7B%5Cln%20N%7D%29) 에 동작합니다.
