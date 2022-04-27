@@ -37,7 +37,7 @@
 
 함수는 `sieve()`, int 형 정수 하나를 매개변수로 받으며 n 이하의 모든 소수들을 오름차순 정렬된 list 형태로 반환합니다.
 
-시간복잡도는 ![O(n\log\log N)](https://latex.codecogs.com/gif.latex?O%28n%5Clog%5Clog%20N%29) 에 동작합니다.
+시간복잡도는 ![O(N\log\log N)](https://latex.codecogs.com/gif.latex?O%28N%5Clog%5Clog%20N%29) 에 동작합니다.
 
 ## 소인수 분해 ( Factorize )
 `factorize.py`
