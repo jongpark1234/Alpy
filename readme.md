@@ -63,6 +63,13 @@ pollard-rho 알고리즘을 이용하여 소인수분해를 작성하였습니�
 
 시간복잡도는 ![O(N)](https://latex.codecogs.com/gif.latex?O%28N%29) 에 동작합니다.
 
+## 최장 공통 부분 수열 ( Longest Common Subsequence )
+`lcs.py`
+
+함수는 `lcs()`, list 또는 str 형태의 수열 두 개를 매개 변수로 받으며 두 수열의 LCS를 str 형태로 반환합니다. 문자열이 아닌 값을 list의 원소로 가지고 있을 경우에는 원소를 한 문자로 생각합니다.
+
+시간복잡도는 ![O(N^2)](https://latex.codecogs.com/gif.latex?O%28N%5E2%29) 에 동작합니다.
+
 ## 가장 긴 증가하는 부분 수열 ( Longest Increasing Subsequence )
 `lis.py`
 
