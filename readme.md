@@ -56,6 +56,13 @@ pollard-rho 알고리즘을 이용하여 소인수분해를 작성하였습니�
 
 시간복잡도는 ![O(N^{1/4}\sqrt{\ln N})](https://latex.codecogs.com/gif.latex?O%28N%5E%7B%5Cfrac%7B1%7D%7B4%7D%7D%5Csqrt%7B%5Cln%20N%7D%29) 에 동작합니다.
 
+## 매내처 ( Manacher )
+`manacher.py`
+
+함수는 `manacher()`, str형 문자열 하나를 매개변수로 받으며 해당 문자열의 가장 긴 팰린드롬 부분 문자열의 길이를 int 형태로 반환합니다.
+
+시간복잡도는 ![O(N)](https://latex.codecogs.com/gif.latex?O%28N%29) 에 동작합니다.
+
 ## 가장 긴 증가하는 부분 수열 ( Longest Increasing Subsequence )
 `lis.py`
 
