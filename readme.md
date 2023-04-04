@@ -18,7 +18,6 @@
     - 최장 공통 부분 수열 ( 50% )
     - 가장 긴 증가하는 부분 수열 ( 80% )
     - 피보나치 수 ( 30% )
-    - Lower/Upper_bound ( 0% )
 
 이후 더 추가될 수 있습니다.
 
@@ -83,3 +82,8 @@ pollard-rho 알고리즘을 이용하여 소인수분해를 작성하였습니�
 함수는 `fibonacci()`, 음이 아닌 int형 정수 하나를 매개변수로 받으며 n번째 피보나치 수를 int 형태로 반환합니다.
 
 시간복잡도는 ![O(\log N)](https://latex.codecogs.com/gif.latex?O%28%5Clog%20N%29) 에 동작합니다.
+
+## 벌리캠프-매시 ( Berlekamp-Massey )
+`berlekamp.py`
+
+클래스는 `BerlekampMassey`, 클래스의 init 매개변수로 결과값의 Modulo값을 받습니다. 이 때 Modulo 값은 소수여야 합니다. 알고리즘을 실행하는 함수는 process() 함수이며, 점화식의 초항이 들어있는 리스트와 음이 아닌 int형 정수 하나를 매개변수로 받습니다. 해당 점화식의 n번 항의 값을 int 형태로 반환합니다. 
