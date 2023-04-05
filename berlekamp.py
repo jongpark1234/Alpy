@@ -2,8 +2,7 @@ class BerlekampMassey:
     def __init__(self, modulo: int):
         self.MOD = modulo
     def __resize(self, numlist: list[int], idx: int) -> list[int]:
-        """
-        크기가 idx인 리스트를 반환하는 인스턴스입니다.
+        """크기가 idx인 리스트를 반환하는 인스턴스입니다.
 
         크기가 idx인 리스트를 반환합니다. 만약 numlist의 길이가 idx보다 작으면, numlist를 반환합니다.
         numlist의 길이가 idx보다 크다면, 리스트 뒤에 0을 추가하여 크기를 조정합니다."""
