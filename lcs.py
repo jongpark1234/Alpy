@@ -1,25 +1,25 @@
 class LCS:
-    def processWithNormalDP(s1: str, s2: str) -> str:
+    def process(s: str, t: str) -> str:
         from collections import deque
         result = deque()
-        l1, l2 = len(s1), len(s2)
-        dp = [[0 for _ in range(l2 + 1)] for _ in range(l1 + 1)]
-        for i in range(1, l1 + 1):
-            for j in range(1, l2 + 1):
-                dp[i][j] = dp[i - 1][j - 1] + 1 if s1[i - 1] == s2[j - 1] else max(dp[i][j - 1], dp[i - 1][j])
-        i1, i2 = l1, l2
+        sLength, tLength = len(s), len(t)
+        dp = [[0 for _ in range(tLength + 1)] for _ in range(sLength + 1)]
+        for i in range(1, sLength + 1):
+            for j in range(1, tLength + 1):
+                dp[i][j] = dp[i - 1][j - 1] + 1 if s[i - 1] == t[j - 1] else max(dp[i][j - 1], dp[i - 1][j])
+        si, ti = sLength, tLength
         while True:
-            if dp[i1 - 1][i2] != dp[i1][i2] and dp[i1][i2 - 1] != dp[i1][i2]:
-                result.appendleft(s2[i2 - 1])
-                i1, i2 = i1 - 1, i2 - 1
+            if dp[si - 1][ti] != dp[si][ti] and dp[si][ti - 1] != dp[si][ti]:
+                result.appendleft(t[ti - 1])
+                si, ti = si - 1, ti - 1
             else:
-                if dp[i1 - 1][i2] == dp[i1][i2]:
-                    i1 -= 1
-                elif dp[i1][i2 - 1] == dp[i1][i2]:
-                    i2 -= 1
-            if i1 == 0 or i2 == 0:
+                if dp[si - 1][ti] == dp[si][ti]:
+                    si -= 1
+                elif dp[si][ti - 1] == dp[si][ti]:
+                    ti -= 1
+            if si == 0 or ti == 0:
                 break
-        return '' if dp[l1][l2] == 0 else ''.join(map(str, result))
+        return '' if dp[sLength][tLength] == 0 else ''.join(map(str, result))
     def processWithHirschBurg(s: str, t: str) -> str:
         def hirschburg(s: str, sLength1: int, sLength2: int, t: str, tLength1: int, tLength2: int) -> str:
             ret, maxValue = '', -float('inf')
@@ -50,3 +50,39 @@ class LCS:
         s = ' ' + s
         t = ' ' + t
         return hirschburg(s, 0, sLength, t, 0, tLength)
+    def processWithBitset(s: str, t: str) -> str:
+        s = input()
+        t = input()
+        sA = [0] * 26
+        for i in range(len(s)):
+            sA[ord(s[i]) - ord('a')] |= (1 << i)
+        ans = 0
+        for i in range(len(t)):
+            curB = t[i:] + t[:i]
+            d = 0
+            for elem in curB:
+                x = d | sA[ord(elem) - ord('a')]
+                d = x & (x ^ (x - ((d << 1) | 1)))
+            cnt = 0
+            while d:
+                cnt += d & 1
+                d >>= 1
+            ans = max(cnt, ans)
+
+        t = list(t)
+        t.reverse()
+        t = "".join(t)
+
+        for i in range(len(t)):
+            curB = t[i:] + t[:i]
+            d = 0
+            for elem in curB:
+                x = d | sA[ord(elem) - ord('a')]
+                d = x & (x ^ (x - ((d << 1) | 1)))
+            cnt = 0
+            while d:
+                cnt += d & 1
+                d >>= 1
+            ans = max(cnt, ans)
+
+        print(ans)
