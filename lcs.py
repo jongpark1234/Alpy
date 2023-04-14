@@ -51,38 +51,19 @@ class LCS:
         t = ' ' + t
         return hirschburg(s, 0, sLength, t, 0, tLength)
     def processWithBitset(s: str, t: str) -> str:
-        s = input()
-        t = input()
-        sA = [0] * 26
+        def bitset(t: str, ret: int) -> int:
+            for i in range(len(t)):
+                d = cnt = 0
+                curT = t[i:] + t[:i]
+                for iter in curT:
+                    x = d | sArray[ord(iter) - ord('a')]
+                    d = x & (x ^ (x - ((d << 1) | 1)))
+                while d:
+                    cnt += d & 1
+                    d >>= 1
+                ret = max(ret, cnt)
+            return ret
+        sArray = [0 for _ in range(26)]
         for i in range(len(s)):
-            sA[ord(s[i]) - ord('a')] |= (1 << i)
-        ans = 0
-        for i in range(len(t)):
-            curB = t[i:] + t[:i]
-            d = 0
-            for elem in curB:
-                x = d | sA[ord(elem) - ord('a')]
-                d = x & (x ^ (x - ((d << 1) | 1)))
-            cnt = 0
-            while d:
-                cnt += d & 1
-                d >>= 1
-            ans = max(cnt, ans)
-
-        t = list(t)
-        t.reverse()
-        t = "".join(t)
-
-        for i in range(len(t)):
-            curB = t[i:] + t[:i]
-            d = 0
-            for elem in curB:
-                x = d | sA[ord(elem) - ord('a')]
-                d = x & (x ^ (x - ((d << 1) | 1)))
-            cnt = 0
-            while d:
-                cnt += d & 1
-                d >>= 1
-            ans = max(cnt, ans)
-
-        print(ans)
+            sArray[ord(s[i]) - ord('a')] |= (1 << i)
+        return bitset(''.join(reversed(t)), bitset(t, 0))
