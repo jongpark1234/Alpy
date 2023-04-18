@@ -72,8 +72,9 @@ class LCS:
                     T = i
             return hirschburg(s, sLength1, S, t, tLength1, T) + hirschburg(s, S, sLength2, t, T, tLength2)
         sLength, tLength = len(s), len(t)
-        LCS1 = [[0 for _ in range(sLength << 1)] for _ in range(2)]
-        LCS2 = [[0 for _ in range(tLength << 1)] for _ in range(2)]
+        length = max(sLength, tLength)
+        LCS1 = [[0 for _ in range(length + 1)] for _ in range(2)]
+        LCS2 = [[0 for _ in range(length + 1)] for _ in range(2)]
         s = ' ' + s
         t = ' ' + t
         return hirschburg(s, 0, sLength, t, 0, tLength)
