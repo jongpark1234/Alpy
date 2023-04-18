@@ -1,5 +1,5 @@
 class BerlekampMassey:
-    def __init__(self, modulo: int):
+    def __init__(self, modulo: int=10 ** 9 + 7):
         self.MOD = modulo
     def __resize(self, numlist: list[int], idx: int) -> list[int]:
         """크기가 idx인 리스트를 반환하는 인스턴스입니다.
