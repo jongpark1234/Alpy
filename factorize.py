@@ -1,4 +1,4 @@
-from primetest import primetest
+from primetest import Primetest
 from random import randrange
 from math import gcd
 def factorize(n):
@@ -16,9 +16,9 @@ def factorize(n):
         return g
     if n == 1:
         return []
-    if not n & 1:
-        return [2] + factorize(n // 2)
-    if primetest(n):
+    if ~n & 1:
+        return [2] + factorize(n >> 1)
+    if Primetest.process(n):
         return [n]
     f = pollard_rho(n)
     return factorize(f) + factorize(n // f)
