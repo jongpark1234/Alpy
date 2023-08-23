@@ -24,10 +24,14 @@ class BerlekampMassey:
         for i in range(vLength):
             for j in range(vLength):
                 t[i + j] += v1[i] * v2[j] % self.MOD
+                if t[i + j] >= self.MOD:
+                    t[i + j] -= self.MOD
         # 거꾸로 추적하며 역원을 적용한다.
         for i in range((vLength << 1) - 1, vLength - 1, -1):
             for j in range(1, vLength + 1):
                 t[i - j] += t[i] * rec[j - 1] % self.MOD
+                if t[i + j] >= self.MOD:
+                    t[i + j] -= self.MOD
         return self.__resize(t, vLength) # 리스트의 길이를 조절하고 반환
     def __berlekampMassey(self, numlist: list[int]) -> list[int]:
         """입력으로 주어진 숫자 배열의 최소 선형 규칙을 찾아서 반환하는 인스턴스입니다.
