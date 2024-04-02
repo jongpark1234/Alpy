@@ -1,12 +1,13 @@
 class FenwickTree:
     """구간 합 쿼리를 효율적으로 처리하기 위한 펜윅 트리 자료구조 입니다."""
 
-    def __init__(self, numlist: list[int]):
+    def __init__(self, numlist: list[int], configuration: bool=True):
         """
         주어진 정수 리스트로 펜윅 트리를 초기화합니다.
 
         Args:
             numlist (list[int]): 펜윅 트리를 초기화할 정수 리스트.
+            configuration (bool): 펜윅 트리 초기 구성에 대한 여부.
         """
 
          # 입력된 리스트
@@ -16,16 +17,19 @@ class FenwickTree:
         self._size = len(self._arr)
 
         # 펜윅 트리 구조
-        self._tree = self._arr[:]
+        self._tree = numlist[:]
 
-        # 펜윅 트리 구성
-        for idx, num in enumerate(self._tree):
+        # 펜윅 트리 초기 구성 여부
+        if configuration:
 
-            # 현재 노드 i에 대해, 다음 노드의 인덱스가 배열 크기를 초과하지 않는지 확인
-            if self._next(idx) < self._size:
+            # 펜윅 트리 구성
+            for idx, num in enumerate(self._tree):
 
-                # 인덱스를 계산하여 부분 합을 누적함
-                self._tree[self._next(idx)] += num
+                # 현재 노드 i에 대해, 다음 노드의 인덱스가 배열 크기를 초과하지 않는지 확인
+                if (node := self._next(idx)) < self._size:
+
+                    # 인덱스를 계산하여 부분 합을 누적함
+                    self._tree[node] += num
 
     def update(self, idx: int, x: int) -> None:
         """
@@ -60,33 +64,35 @@ class FenwickTree:
             end (int): 구간의 끝 인덱스 (미포함).
 
         Returns:
-            int: 지정된 구간의 원소들의 부분합.
+            int: 지정된 구간의 원소들의 합.
+        """
+
+        return self.get(end - 1) - self.get(start - 1)
+    
+    def get(self, idx: int) -> int:
+        """
+        idx 까지의 원소들의 합을 계산합니다.
+
+        Args:
+            idx (int): 구간의 끝 인덱스 (미포함).
+        
+        Returns:
+            int: idx까지 구간의 원소들의 합.
         """
 
         ret = 0
 
-        cur = end - 1
         # end 까지의 원소들의 합 계산
-        while cur >= 0:
+        while idx >= 0:
 
-            # 결과에 더하기
-            ret += self._tree[cur]
-
-            # 이전 노드로 이동
-            cur = self._prev(cur)
-
-        cur = start - 1
-        # start 까지의 원소들의 합을 빼서 최종 결과 계산
-        while cur >= 0:
-
-            # 결과에서 빼기
-            ret -= self._tree[cur]
+            # 결과값에 해당 노드값 더하기
+            ret += self._tree[idx]
 
             # 이전 노드로 이동
-            cur = self._prev(cur)
+            idx = self._prev(idx)
 
         return ret
-
+    
     def _prev(self, idx: int) -> int:
         """
         주어진 인덱스의 노드의 이전 노드의 인덱스를 계산합니다.
