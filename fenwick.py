@@ -1,23 +1,29 @@
 class FenwickTree:
-    """구간 합 쿼리를 효율적으로 처리하기 위한 펜윅 트리 자료구조 입니다."""
+    """
+    구간 합 쿼리를 효율적으로 처리하기 위한 펜윅 트리 자료구조 입니다.
+
+    모든 메서드는 1-based indexing으로 구현되었습니다.
+
+    다만 초기화 배열은 0-based indexing을 사용해야 합니다.
+    """
 
     def __init__(self, numlist: list[int]):
         """
         주어진 정수 리스트로 펜윅 트리를 초기화합니다.
 
         Args:
-            numlist (list[int]): 펜윅 트리를 초기화할 정수 리스트.
+            numlist (list[int]): 펜윅 트리를 초기화할 정수 리스트. ( require 0-based array )
         """
 
-         # 입력된 리스트
-        self._arr = numlist[:]
-
         # 입력 리스트의 크기
-        self._size = len(self._arr)
+        self._size = len(numlist)
+
+        # 입력된 리스트
+        self._arr = numlist[:]
 
         # 펜윅 트리 구조
         self._tree = numlist[:]
-
+        
         # 펜윅 트리 구성
         for idx, num in enumerate(self._tree):
 
@@ -29,15 +35,15 @@ class FenwickTree:
 
     def update(self, idx: int, x: int) -> None:
         """
-        주어진 인덱스의 값을 x로 업데이트합니다.
+        주어진 인덱스의 값을 x만큼 업데이트합니다.
 
         Args:
-            idx (int): 업데이트할 인덱스.
-            x (int): 주어진 인덱스에 업데이트할 값.
+            idx (int): 업데이트할 인덱스. ( 1 <= idx <= n )
+            x (int): 주어진 인덱스의 원소에 더할 값.
         """
 
-        # 변경할 값과 기존 값 간의 차이 계산
-        x -= self._arr[idx]
+        # 0-based indexing을 위해 1 차감
+        idx -= 1
 
         # 원본 리스트 업데이트
         self._arr[idx] += x
@@ -50,35 +56,49 @@ class FenwickTree:
 
             # 다음 노드로 이동
             idx = self._next(idx)
+    
+    def set(self, idx: int, x: int) -> None:
+        """
+        주어진 인덱스의 값을 x로 업데이트합니다.
+
+        Args:
+            idx (int): 업데이트할 인덱스. ( 1 <= idx <= n )
+            x (int): 주어진 인덱스의 원소에 대입할 값.
+        """
+
+        # 변경할 값과 기존 값 간의 차이를 계산한 뒤 이를 더하는 식으로 계산
+        self.update(idx, x - self._arr[idx - 1])
 
     def query(self, start: int, end: int) -> int:
         """
-        주어진 구간 [start, end] 내에 있는 원소들의 합을 계산합니다.
+        sum(arr[start - 1], ..., arr[end - 1])을 계산합니다.
 
         Args:
-            start (int): 구간의 시작 인덱스 (포함).
-            end (int): 구간의 끝 인덱스 (미포함).
+            start (int): 구간의 시작 인덱스. ( 1 <= start <= n)
+            end (int): 구간의 끝 인덱스. ( 1 <= end <= n)
 
         Returns:
             int: 지정된 구간의 원소들의 합.
         """
 
-        return self.get(end - 1) - self.get(start - 1)
+        return self.get(end) - self.get(start - 1)
     
     def get(self, idx: int) -> int:
         """
-        idx 까지의 원소들의 합을 계산합니다.
+        sum(arr[0], ..., arr[idx - 1])를 계산합니다.
 
         Args:
-            idx (int): 구간의 끝 인덱스 (미포함).
+            idx (int): 구간의 끝 인덱스 ( 1 <= idx <= n )
         
         Returns:
             int: idx까지 구간의 원소들의 합.
         """
-
         ret = 0
 
-        # end 까지의 원소들의 합 계산
+        # 0-based indexing을 위해 1 차감
+        idx -= 1
+
+        # idx 까지의 원소들의 합 계산
         while idx >= 0:
 
             # 결과값에 해당 노드값 더하기
