@@ -1,13 +1,12 @@
 class FenwickTree:
     """구간 합 쿼리를 효율적으로 처리하기 위한 펜윅 트리 자료구조 입니다."""
 
-    def __init__(self, numlist: list[int], configuration: bool=True):
+    def __init__(self, numlist: list[int]):
         """
         주어진 정수 리스트로 펜윅 트리를 초기화합니다.
 
         Args:
             numlist (list[int]): 펜윅 트리를 초기화할 정수 리스트.
-            configuration (bool): 펜윅 트리 초기 구성에 대한 여부.
         """
 
          # 입력된 리스트
@@ -19,17 +18,14 @@ class FenwickTree:
         # 펜윅 트리 구조
         self._tree = numlist[:]
 
-        # 펜윅 트리 초기 구성 여부
-        if configuration:
+        # 펜윅 트리 구성
+        for idx, num in enumerate(self._tree):
 
-            # 펜윅 트리 구성
-            for idx, num in enumerate(self._tree):
+            # 현재 노드 i에 대해, 다음 노드의 인덱스가 배열 크기를 초과하지 않는지 확인
+            if (node := self._next(idx)) < self._size:
 
-                # 현재 노드 i에 대해, 다음 노드의 인덱스가 배열 크기를 초과하지 않는지 확인
-                if (node := self._next(idx)) < self._size:
-
-                    # 인덱스를 계산하여 부분 합을 누적함
-                    self._tree[node] += num
+                # 인덱스를 계산하여 부분 합을 누적함
+                self._tree[node] += num
 
     def update(self, idx: int, x: int) -> None:
         """
