@@ -13,7 +13,7 @@ class Factorize:
     이 클래스는 주어진 정수에 대해 Pollard's Rho 알고리즘을 적용하여 소인수를 찾는 메소드를 제공합니다.
     """
 
-    def _f(x: int, a: int, n: int) -> int:
+    def _f(self, x: int, a: int, n: int) -> int:
         """
         f(x)=x^2+a(mod n) 꼴의 이차다항식을 구현한 메소드입니다.
 
@@ -90,6 +90,3 @@ class Factorize:
         
         # 찾은 소인수로 n을 나누고 재귀적으로 소인수분해 진행
         return self.factorize(f) + self.factorize(n // f)
-    
-
-print(Factorize().factorize(52341243))
