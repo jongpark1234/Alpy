@@ -30,9 +30,11 @@ class SCC:
 
         # s: 방문한 노드들의 경로 저장, p: 각 노드의 깊이 저장
         path, p = [], []
-        
+
         # 스택 ( [ 0, 1, ..., s-2, s-1 ] )
-        while (stack := list(range(size))):
+        stack = list(range(size))
+        
+        while stack:
 
             # 스택에서 노드를 꺼냄
             u = stack.pop()
