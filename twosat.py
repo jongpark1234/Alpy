@@ -12,6 +12,7 @@ class TwoSat:
             var_count (int): 변수의 개수를 나타내는 정수입니다.
         """
         self._graph = [set() for _ in range(var_count * 2)]
+        self._var_ord = self._neg_var_ord = None
     
     def _mapping(self, x: int) -> int:
         """
