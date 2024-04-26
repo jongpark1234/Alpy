@@ -10,28 +10,42 @@ class DisjointSet:
         # 초기에는 모든 원소의 부모를 -1로 설정하여 각각이 독립 집함임을 나타냄.
         self._parent = [i for i in range(size)]
         self._size = [1 for _ in range(size)]
+    
+    def equal(self, x: int, y: int) -> bool:
+        """
+        주어진 두 원소 x와 y가 서로 같은 집합에 있는지 여부를 반환합니다.
 
-    def union(self, x: int, y: int) -> int:
+        Args:
+            x (int): 집합 여부를 확인할 두 원소 중 첫번째 원소입니다.
+            y (int): 집합 여부를 확인할 두 원소 중 두번째 원소입니다.
+
+        Returns:
+            bool: 두 원소가 같은 집합에 속해있는지에 대한 여부를 반환합니다.
+        """
+        
+        return self.find(x) == self.find(y)
+
+    def union(self, x: int, y: int) -> bool:
         """
         주어진 두 원소 x와 y가 속한 집합을 합칩니다.
-        각 원소의 루트(root)를 찾은 후, 두 루트가 같으면 이미 같은 집합에 속해있으므로 아무 작업도 하지 않고 해당 루트를 반환합니다.
+        각 원소의 루트(root)를 찾은 후, 두 루트가 같으면 이미 같은 집합에 속해있으므로 아무 작업도 하지 않고 False를 반환합니다.
         
-        그렇지 않다면, 두 루트 중 크기가 더 작은 집합을 크기가 더 큰 집합에 합칩니다. 이때, 합친 집합의 루트를 반환합니다.
+        그렇지 않다면, 두 루트 중 크기가 더 작은 집합을 크기가 더 큰 집합에 합칩니다. 이때 True를 반환합니다.
 
         Args:
             x (int): 각각이 속한 집합을 합칠 두 원소 중 첫번째 원소입니다.
             y (int): 각각이 속한 집합을 합칠 두 원소 중 두번째 원소입니다.
 
         Returns:
-            int: 합쳐진 집합의 루트 노드를 반환합니다.
+            bool: Union 작업을 수행했는지 여부를 반환합니다.
         """
 
         # 각 원소 x와 y가 속한 집합의 root 노드를 찾음
         root_x, root_y = self.find(x), self.find(y)
 
-        # 이미 같은 집합에 속해있다면 root를 반환
+        # 이미 같은 집합에 속해있다면 False를 반환
         if root_x == root_y:
-            return root_x
+            return False
         
         # 두 집합을 합치기 위해 크기를 비교하여 더 작은 집합을 더 큰 집합에 붙임
         if self._size[root_x] < self._size[root_y]:
@@ -41,7 +55,7 @@ class DisjointSet:
         self._parent[root_y] = root_x
         self._size[root_x] += self._size[root_y]
 
-        return root_x
+        return True
 
     def find(self, x: int) -> int:
         """
