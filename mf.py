@@ -1,30 +1,24 @@
 from collections import deque
 class MF:
-    """
-    이 클래스는 최대 유량 문제를 해결하기 위한 Dinic 알고리즘을 구현한 것입니다.
-
-    최대 유량 문제는 네트워크의 각 간선에 용량이 할당되어 있고,
-    한 정점에서 다른 정점으로 유량을 흘려보내는 과정에서 최대로 보낼 수 있는 유량을 찾는 문제입니다.
-
-    이 클래스는 그래프의 구조를 나타내는 인접 리스트를 사용하여 그래프를 표현하고,
-    Dinic 알고리즘을 이용하여 최대 유량을 계산합니다.
-    """
-    
     def __init__(self, v: int):
+
         # v개의 정점을 가진 최대 유량 그래프 초기화
         self.size = v
 
         # 그래프의 인접 리스트
         self.adj = [[] for _ in range(v)]
 
-        # BFS에 사용되는 깊이 배열
+        # 용량을 저장하는 인접 리스트
+        self.cap = [[0 for _ in range(v)] for _ in range(v)]
+
+        # 흐름을 저장하는 인접 리스트
+        self.flow = [[0 for _ in range(v)] for _ in range(v)]
+
+        # 각 노드까지의 거리를 저장하는 리스트
         self.depth = [0 for _ in range(v)]
 
-        # DFS에서 마지막 방문한 간선을 저장하는 배열
+        # 각 노드의 마지막으로 방문한 간선을 저장하는 리스트
         self.last = [0 for _ in range(v)]
-
-        # 간선을 저장하는 리스트
-        self.edges = []
 
     def add_edge(self, u: int, v: int, c: int, d: bool=True):
         """
@@ -39,17 +33,17 @@ class MF:
             d (bool, optional): 간선의 방향성 여부, 기본값은 True (단방향 간선)
         """
 
-        # edge에서의 간선 인덱스 추가
-        self.adj[u].append(len(self.edges))
+        # u에서 v로 가는 간선 추가
+        self.adj[u].append(v)
 
-        # 원래 간선 추가
-        self.edges.append((v, c, 0))
+        # v에서 u로 가는 간선 추가
+        self.adj[v].append(u)
 
-        # edge에서의 간선 인덱스 추가
-        self.adj[v].append(len(self.edges))
+        # 용량 저장
+        self.cap[u][v] = c
 
-        # 양방향일 경우 반대 간선 추가
-        self.edges.append((u, 0 if d else c, 0))
+        # 양방향일 경우 반대 간선의 용량도 저장
+        self.cap[v][u] = 0 if d else c
 
     def dinic(self, s: int, t: int) -> int:
         """
@@ -64,19 +58,19 @@ class MF:
             int: s에서 t로의 최대 유량
         """
 
-        # 최대 유량 초기화
+        # 최대 유량을 저장할 변수
         mf = 0
 
-        # 증가 경로가 존재하는 동안
+        # s에서 t로의 경로가 존재하는 동안 반복
         while self.bfs(s, t):
 
-            # 마지막으로 방문한 간선 배열 초기화
+            # 각 노드의 마지막 방문한 간선 초기화
             self.last = [0 for _ in range(self.size)]
 
-            # s에서 t로의 유량 증가 경로가 있는 동안
+            # s에서 t로의 경로를 찾고, 해당 경로에서의 유량을 계산하여 f에 저장
             while f := self.dfs(s, t):
 
-                # 유량을 최대 유량에 추가
+                # 최대 유량에 f(해당 경로의 유량)를 더함
                 mf += f
         
         # 최대 유량 반환
@@ -95,40 +89,37 @@ class MF:
             bool: 증가 경로의 존재 여부
         """
 
-        # 깊이 배열 초기화
-        self.depth = [-1 for _ in range(s)] + [0] + [-1 for _ in range(self.adj - s - 1)]
+        # 모든 노드의 거리를 -1로 초기화 ( 시작 노드의 거리는 0으로 설정 )
+        self.depth = [-1 for _ in range(s)] + [0] + [-1 for _ in range(self.size - s - 1)]
 
-        # 출발 정점으로 큐 초기화
+        # 시작 정점으로 큐 초기화
         queue = deque([s])
 
-        # 큐가 비어있지 않은 동안
+        # 큐가 빌 때까지 반복
         while queue:
 
-            # 큐에서 정점 추출
+            # 큐에서 노드 하나를 꺼냄
             u = queue.popleft()
 
-            # 정점과 연결된 간선들에 대해 반복
-            for idx in self.adj[u]:
+            # 해당 노드와 연결된 모든 노드에 대해 반복
+            for v in self.adj[u]:
 
-                # 도착 정점, 용량, 유량
-                v, cap, flow = self.edges[idx]
+                # 도착 노드가 아직 방문되지 않았고 잔여 용량이 있는 경우 ( 흐름이 용량보다 작은 경우 )
+                if self.depth[v] == -1 and self.flow[u][v] < self.cap[u][v]:
 
-                # 도착 정점이 방문되지 않았고 잔여 용량이 있는 경우
-                if self.depth[v] == -1 and flow < cap:
-
-                    # 도착 정점의 거리 설정
+                    # 도착 노드의 거리를 업데이트
                     self.depth[v] = self.depth[u] + 1
 
-                    # 도착 정점을 큐에 추가
+                    # 큐에 추가
                     queue.append(v)
 
-                    # 도착 정점이 싱크 정점인 경우
+                    # 도착 노드에 도달한 경우
                     if v == t:
                         
-                        # 증가 경로 발견
+                        # 증가 경로가 존잻람을 반환
                         return True
         
-        # 증가 경로 없음
+        # 증가 경로가 없음을 반환
         return False
 
     def dfs(self, u: int, t: int, f: int = float('inf')) -> int:
@@ -145,35 +136,32 @@ class MF:
             int: 증가된 유량의 값
         """
 
-        # 현재 정점이 싱크 정점인 경우
+        # 도착 노드에 도달한 경우
         if u == t:
 
-            # 유량 반환
+            # 현재 경로에서의 유량을 반환
             return f
         
-        # 방문되지 않은 이웃이 있는 경우
+        # 노드 u의 모든 인접한 간선에 대해 반복
         while self.last[u] < len(self.adj[u]):
 
-            # 간선 인덱스 얻기
-            idx = self.adj[u][self.last[u]]
+            # 다음으로 방문할 노드
+            v = self.adj[u][self.last[u]]
 
-            # 도착 정점, 용량, 유량 얻기
-            v, cap, flow = self.edges[idx]
+            # 도착 노드가 최단 경로 상에 있고 잔여 용량이 있는 경우 ( 흐름이 용량보다 작은 경우 )
+            if self.depth[v] == self.depth[u] + 1 and self.flow[u][v] < self.cap[u][v]:
 
-            # 도착 정점이 최단 경로 상에 있고 잔여 용량이 있는 경우
-            if self.depth[v] == self.depth[u] + 1 and flow < cap:
+                # 재귀적으로 경로를 찾고 유량을 계산
+                pushed = self.dfs(v, t, min(f, self.cap[u][v] - self.flow[u][v]))
 
-                # 재귀적으로 유량 증가 찾기
-                pushed = self.dfs(v, t, min(f, cap - flow))
-
-                # 유량이 증가된 경우
+                # 유량을 보낼 수 있는 경우 ( 유량이 증가된 경우 )
                 if pushed:
 
-                    # 정방향 간선 업데이트
-                    self.edges[idx] = (v, cap, flow + pushed)
+                    # 유량 추가
+                    self.flow[u][v] += pushed
 
-                    # 역방향 간선 업데이트
-                    self.edges[idx ^ 1] = (self.edges[idx ^ 1][0], self.edges[idx ^ 1][1], self.edges[idx ^ 1][2] - pushed)
+                    # 역방향 간선의 유량 제거
+                    self.flow[v][u] -= pushed
 
                     # 증가된 유량 반환
                     return pushed
