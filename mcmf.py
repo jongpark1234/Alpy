@@ -1,3 +1,5 @@
+from collections import deque
+
 class MCMF:
     """
     최소 비용 최대 유량(Minimum Cost Maximum Flow, MCMF) 알고리즘을 SPFA를 이용하여 구현한 클래스입니다.
