@@ -1,5 +1,3 @@
-from collections import deque
-
 class MCMF:
     """
     최소 비용 최대 유량(Minimum Cost Maximum Flow, MCMF) 알고리즘을 SPFA를 이용하여 구현한 클래스입니다.
@@ -23,7 +21,7 @@ class MCMF:
         self.cost = [[0 for _ in range(v)] for _ in range(v)]
 
         # 각 노드까지의 거리를 저장하는 리스트
-        self.depth = [0 for _ in range(v)]
+        self.dist = [0 for _ in range(v)]
 
         # 각 노드의 마지막으로 방문한 간선을 저장하는 리스트
         self.last = [0 for _ in range(v)]
@@ -125,7 +123,7 @@ class MCMF:
         """
 
         # 모든 노드의 거리를 무한대로 초기화
-        self.depth = [float('inf') for _ in range(s)] + [0] + [float('inf') for _ in range(self.size - s - 1)]
+        self.dist = [float('inf') for _ in range(s)] + [0] + [float('inf') for _ in range(self.size - s - 1)]
 
         # 시작 노드를 방문 표시
         self.visited[s] = True
@@ -146,10 +144,10 @@ class MCMF:
             for v in self.adj[u]:
 
                 # 잔여 용량이 있으며, v로 이동하는 것이 경로의 비용을 더 줄일 수 있는 경우
-                if self.flow[u][v] < self.cap[u][v] and self.depth[v] > self.depth[u] + self.cost[u][v]:
+                if self.flow[u][v] < self.cap[u][v] and self.dist[v] > self.dist[u] + self.cost[u][v]:
 
                     # 거리 업데이트
-                    self.depth[v] = self.depth[u] + self.cost[u][v]
+                    self.dist[v] = self.dist[u] + self.cost[u][v]
 
                     # 해당 노드를 방문하지 않은 경우
                     if not self.visited[v]:
@@ -161,7 +159,7 @@ class MCMF:
                         queue.append(v)
 
         # 도착 노드까지의 최단 경로가 존재하는지 여부 반환
-        return self.depth[t] < float('inf')
+        return self.dist[t] < float('inf')
 
     def dfs(self, u: int, t: int, f: int=float('inf')) -> int:
         """
@@ -189,7 +187,7 @@ class MCMF:
         for v in self.adj[u][self.last[u]:len(self.adj[u])]:
 
             # 노드 v가 아직 방문되지 않았고, 잔여 용량이 있으며, v로 이동하는 것이 현재까지의 최단 경로의 비용을 유지할 수 있는 경우
-            if not self.visited[v] and self.flow[u][v] < self.cap[u][v] and self.depth[v] == self.depth[u] + self.cost[u][v]:
+            if not self.visited[v] and self.flow[u][v] < self.cap[u][v] and self.dist[v] == self.dist[u] + self.cost[u][v]:
 
                 # 재귀적으로 경로를 찾고 유량을 계산
                 pushed = self.dfs(v, t, min(f, self.cap[u][v] - self.flow[u][v]))
