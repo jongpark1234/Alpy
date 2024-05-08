@@ -101,11 +101,8 @@ class MCMF:
                 # 최대 유량 업데이트
                 mf += f
 
-                # 총 비용 업데이트
-                mc += self.total_cost
-
-                # 총 비용 초기화
-                self.total_cost = 0
+                # 최소 비용 업데이트
+                mc = min(mc, self.total_cost)
 
         # 최대 유량과 최소 비용 반환
         return mf, mc
