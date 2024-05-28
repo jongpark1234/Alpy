@@ -2,7 +2,7 @@ from scc import SCC
 from itertools import permutations, pairwise
 
 class TwoSat:
-    '''2-SAT solver.'''
+    """2-SAT solver."""
 
     def __init__(self, var_count: int) -> None:
         """
@@ -11,8 +11,9 @@ class TwoSat:
         Args:
             var_count (int): 변수의 개수를 나타내는 정수입니다.
         """
+        self.n = var_count
         self._graph = [set() for _ in range(var_count * 2)]
-        self._var_ord = self._neg_var_ord = None
+        self._ord = self._nord = None
 
     def x_is_true(self, x: int) -> None:
         """
@@ -77,8 +78,8 @@ class TwoSat:
                 y_i += 2
             
             # 첫 번째 변수와 마지막 변수의 관계를 나타내는 간선 추가
-            self._graph[y0 + 1] = (x[0] ^ 1,)
-            self._graph[y_i - 2] = (x[-1] ^ 1)
+            self._graph[y0 + 1] = x[0] ^ 1
+            self._graph[y_i - 2] = x[-1] ^ 1
 
     def is_satisfiable(self) -> bool:
         """
@@ -88,16 +89,16 @@ class TwoSat:
             bool: 문제가 충족 가능하면 True, 아니면 False를 반환합니다.
         """
 
-        if self._var_ord is None:
+        if self._ord is None:
 
             # 그래프의 강한 연결 요소 구해오기
             _, scc_no = SCC.strongly_connected_component(self._graph)
 
             # 각 변수의 순서와 부정 변수의 순서 분리
-            self._var_ord, self._neg_var_ord = scc_no[::2], scc_no[1::2]
+            self._ord, self._nord = scc_no[::2], scc_no[1::2]
 
         # 모든 변수와 그 부정 변수가 같지 않은지 확인하여 충족 가능성 여부 반환
-        return all(x != y for x, y in zip(self._var_ord, self._neg_var_ord))
+        return all(x != y for x, y in zip(self._ord, self._nord))
 
     def find_truth_assignment(self) -> list[bool]:
         """
@@ -113,4 +114,4 @@ class TwoSat:
         
         # 충족 가능한 경우, 변수에 대한 참 값의 할당을 생성하여 반환
         # 각 변수와 그 부정 변수의 순서를 비교하여 참 값의 할당을 결정
-        return [x < y for x, y in zip(self._var_ord, self._neg_var_ord)]
+        return [x < y for x, y, _ in zip(self._ord, self._nord, range(self.n))]
