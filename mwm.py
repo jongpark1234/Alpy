@@ -961,54 +961,24 @@ class MaximumWeightedMatching:
 
             return self.time > rhs.time
 
-    def __init__(self, n: int, edgelist: list[InputEdge]):
+    def __init__(self, n: int):
         """
         Args:
             n (int): 노드의 개수.
-            edgelist (list[InputEdge]): 각 간선이 시작 노드, 끝 노드, 가중치를 포함하는 입력 간선 리스트.
         """
         
         # 노드의 개수
         self.N = n
 
         # 가능한 블로섬의 수
-        self.B = (self.N - 1) // 2
+        self.B = self.N - 1 >> 1
 
         # 노드와 블로섬, 더미 노드를 포함한 총 슬롯 수
         self.S = self.N + self.B + 1
 
-        # 인접 리스트 구성을 관리하기 위한 오프셋 배열
-        self.offset = [0 for _ in range(self.N + 2)]
+        # 입력받은 간선을 저장할 리스트
+        self.input_edge: list[InputEdge] = []
 
-        # 무향 그래프이므로 입력 간선의 두 배 크기로 배열 초기화
-        self.edges: list[MaximumWeightedMatching.Edge] = [None for _ in range(len(edgelist) << 1)]
-
-        # 우선순위 큐 초기화
-        self.BinaryHeap_EdgeEvent = BinaryHeap(self.S, isEdgeEvent=True)
-        self.PairingHeaps = PairingHeaps(self.S, self.S)
-        self.PriorityQueue = PriorityQueue()
-        self.BinaryHeap_int = BinaryHeap(self.S, isEdgeEvent=False)
-
-        # 각 노드의 간선 수를 오프셋 배열에 채우기
-        for edge in edgelist:
-            self.offset[edge.frm + 1] += 1
-            self.offset[edge.to + 1] += 1
-
-        # 누적 오프셋을 계산하여 각 노드의 간선 시작 인덱스 얻어오기
-        self.offset = list(accumulate(self.offset))
-
-        # 입력 간선 리스트에서 간선 배열 채우기
-        for edge in edgelist:
-            self.edges[self.offset[edge.frm]] = self.Edge(edge.to, edge.cost << 1)
-            self.offset[edge.frm] += 1
-
-            self.edges[self.offset[edge.to]] = self.Edge(edge.frm, edge.cost << 1)
-            self.offset[edge.to] += 1
-
-        # offset 배열 복원
-        for i in range(self.N + 1, 0, -1):
-            self.offset[i] = self.offset[i - 1]
-        self.offset[0] = 0
     
     def maximum_weighted_matching(self) -> tuple[int, list[int]]:
         """
@@ -1021,7 +991,7 @@ class MaximumWeightedMatching:
             tuple[int, list[int]]: 매칭의 총 가중치와 매칭된 노드들의 리스트를 반환합니다.
         """
 
-        # 알고리즘 초기화
+        # 상태 초기화
         self.initialize()
         
         # 각 노드의 잠재력 설정
@@ -2178,53 +2148,86 @@ class MaximumWeightedMatching:
         Matching Algorithm의 초기 설정을 수행하는 메서드입니다.
         """
 
-        # 큐를 초기화합니다.
+        # 인접 리스트 구성을 관리하기 위한 오프셋 배열
+        self.offset = [0 for _ in range(self.N + 2)]
+
+        # 무향 그래프이므로 입력 간선의 두 배 크기로 배열 초기화
+        self.edges: list[MaximumWeightedMatching.Edge] = [None for _ in range(len(self.input_edge) << 1)]
+
+        # 우선순위 큐 초기화
+        self.BinaryHeap_EdgeEvent = BinaryHeap(self.S, isEdgeEvent=True)
+        self.PairingHeaps = PairingHeaps(self.S, self.S)
+        self.PriorityQueue = PriorityQueue()
+        self.BinaryHeap_int = BinaryHeap(self.S, isEdgeEvent=False)
+
+        # 각 노드의 간선 수를 오프셋 배열에 채우기
+        for edge in self.input_edge:
+            self.offset[edge.frm + 1] += 1
+            self.offset[edge.to + 1] += 1
+
+        # 누적 오프셋을 계산하여 각 노드의 간선 시작 인덱스 얻어오기
+        self.offset = list(accumulate(self.offset))
+
+        # 입력 간선 리스트에서 간선 배열 채우기
+        for edge in self.input_edge:
+            self.edges[self.offset[edge.frm]] = self.Edge(edge.to, edge.cost << 1)
+            self.offset[edge.frm] += 1
+
+            self.edges[self.offset[edge.to]] = self.Edge(edge.frm, edge.cost << 1)
+            self.offset[edge.to] += 1
+
+        # offset 배열 복원
+        for i in range(self.N + 1, 0, -1):
+            self.offset[i] = self.offset[i - 1]
+        self.offset[0] = 0
+
+        # 큐 초기화
         self.queue = deque([])
 
-        # 매칭 배열을 초기화합니다.
+        # 매칭 배열 초기화
         self.mate = [0 for _ in range(self.S)]
 
-        # 각 노드의 링크를 초기화합니다.
+        # 각 노드의 링크 초기화
         self.link = [self.Link(0, 0) for _ in range(self.S)]
 
-        # 각 노드의 상태를 초기화합니다.
+        # 각 노드의 상태 초기화
         self.label = [self.K_FREE for _ in range(self.S)]
 
-        # 각 노드의 기본값을 자신의 인덱스로 초기화합니다.
+        # 각 노드의 기본값을 자신의 인덱스로 초기화
         self.base = list(range(self.S))
 
-        # 각 노드의 표면 값을 자신의 인덱스로 초기화합니다.
+        # 각 노드의 표면 값을 자신의 인덱스로 초기화
         self.surface = list(range(self.S))
 
-        # 각 노드의 잠재력을 초기화합니다.
+        # 각 노드의 잠재력
         self.potential = [0 for _ in range(self.S)]
 
-        # 각 노드를 Node 객체로 초기화합니다.
+        # 각 노드를 Node 객체로 초기화
         self.node = list(map(self.Node, range(self.S)))
 
-        # 사용되지 않은 블로섬 ID를 초기화합니다.
+        # 사용되지 않은 블로섬 ID
         self.unused_blossom_id = [self.N + self.B - i for i in range(self.B)]
         self.unused_blossom_id_index = self.B
 
-        # 시간을 초기화합니다.
+        # 시간 초기화
         self.reset_time()
 
-        # 각 노드의 생성 시간을 초기화합니다.
+        # 각 노드의 생성 시간 초기화
         self.time_created = [0 for _ in range(self.S)]
 
-        # 각 노드의 슬랙 값을 무한대로 초기화합니다.
+        # 각 노드의 슬랙 값을 무한대로 초기화
         self.slack = [inf for _ in range(self.S)]
 
-        # 각 노드의 최적 slack 값을 초기화합니다.
+        # 각 노드의 최적 slack 값 초기화
         self.best_from = [0 for _ in range(self.S)]
 
-        # 각 노드의 무거운 블로섬 값을 초기화합니다.
+        # 각 노드의 무거운 블로섬 값 초기화
         self.heavy = [0 for _ in range(self.S)]
 
-        # 각 노드의 지연 값을 초기화합니다.
+        # 각 노드의 지연 값 초기화
         self.lazy = [0 for _ in range(self.S)]
 
-        # 각 노드의 그룹을 초기화합니다.
+        # 각 노드의 그룹 초기화
         self.group = list(range(self.S))
         
     def set_potential(self) -> None:
@@ -2244,3 +2247,17 @@ class MaximumWeightedMatching:
 
             # 잠재력은 최대 비용의 절반으로 설정
             self.potential[u] = max_cost >> 1
+    
+    def add_edge(self, u: int, v: int, w: int) -> None:
+        """
+        주어진 두 노드 u와 v, 그리고 가중치 w를 사용하여 그래프에 새로운 간선을 추가합니다.
+        간선은 양방향이므로 두 노드 간의 가중치를 모두 설정합니다.
+
+        Args:
+            u (int): 간선의 첫 번째 노드.
+            v (int): 간선의 두 번째 노드.
+            w (int): 간선의 가중치.
+        """
+
+        # 노드 u와 노드 v 사이에 가중치 w를 가진 간선을 추가
+        self.input_edge.append(InputEdge(u, v, w))
