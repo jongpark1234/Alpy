@@ -2242,8 +2242,8 @@ class MaximumWeightedMatching:
             max_cost = 0
 
             # 각 노드에 연결된 엣지의 최대 비용 탐색
-            for eid in range(self.offset[u], self.offset[u + 1]):
-                max_cost = max(max_cost, self.edges[eid].cost)
+            for edge_id in range(self.offset[u], self.offset[u + 1]):
+                max_cost = max(max_cost, self.edges[edge_id].cost)
 
             # 잠재력은 최대 비용의 절반으로 설정
             self.potential[u] = max_cost >> 1
