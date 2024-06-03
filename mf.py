@@ -113,14 +113,8 @@ class MF:
                     # 큐에 추가
                     queue.append(v)
 
-                    # 도착 노드에 도달한 경우
-                    if v == t:
-                        
-                        # 증가 경로가 존재함을 반환
-                        return True
-        
-        # 증가 경로가 없음을 반환
-        return False
+        # 증가 경로의 존재 여부를 반환
+        return self.depth[t] != -1
 
     def dfs(self, u: int, t: int, f: int = float('inf')) -> int:
         """
