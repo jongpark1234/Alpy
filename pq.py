@@ -1,5 +1,5 @@
-from heapq import heappush, heappop
-from typing import Generic, TypeVar, Callable
+from heapq import heappush, heappop, heapify
+from typing import Generic, TypeVar, Callable, Iterable 
 
 T = TypeVar('T')
 
@@ -11,7 +11,7 @@ class PriorityQueue(Generic[T]):
     사용자는 우선순위 결정 로직을 커스텀하게 조정할 수 있도록 key 매개변수를 제공할 수 있습니다.
     """
     
-    def __init__(self, key: Callable = lambda x: x):
+    def __init__(self, init_list: Iterable[T] = [], key: Callable = lambda x: x):
         """
         우선순위 큐를 초기화합니다.
 
@@ -20,7 +20,10 @@ class PriorityQueue(Generic[T]):
         """
 
         # 실제 요소들이 힙 자료구조를 통해 저장될 리스트
-        self.heap: list[T] = []
+        self.heap: list[T] = init_list
+
+        # 리스트를 힙으로 변경
+        heapify(self.heap)
 
         # 요소 비교에 사용될 키 생성 함수
         self.key = key
