@@ -20,7 +20,7 @@ class PriorityQueue(Generic[T]):
         """
 
         # 실제 요소들이 힙 자료구조를 통해 저장될 리스트
-        self.heap: list[T] = init_list
+        self.heap: list[T] = init_list[:]
 
         # 리스트를 힙으로 변경
         heapify(self.heap)
@@ -54,11 +54,20 @@ class PriorityQueue(Generic[T]):
 
     def __len__(self) -> int:
         """
-        현재 큐의 길이(요소 수)를 반환합니다.
+        현재 힙의 길이(요소 수)를 반환합니다.
         
         Returns:
-            int: 큐 내 요소의 개수
+            int: 힙 내 요소의 개수
         """
 
-        # 현재 힙에 저장된 요소의 수를 반환
         return len(self.heap)
+
+    def __bool__(self) -> bool:
+        """
+        현재 힙에 요소가 들어있으면 True, 아니면 False를 반환합니다.
+        
+        Returns:
+            bool: 힙에 요소가 들어있는지 여부
+        """
+
+        return bool(self.heap)
